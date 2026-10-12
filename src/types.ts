@@ -60,4 +60,8 @@ export interface OverlayConfig {
   sessionTopic: string;
   sessionStartTime: string | null;
   companionUrl: string;
+  // Screen-share specific settings
+  scale: number; // 0.7 to 1.2
+  safeMargin: number; // in pixels (e.g. 16, 24, 32)
+  distractionFree: boolean; // Only brand + mission
 }

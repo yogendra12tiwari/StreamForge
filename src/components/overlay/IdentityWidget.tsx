@@ -10,37 +10,32 @@ export function IdentityWidget() {
 
   return (
     <div
-      className="inline-flex flex-col gap-1.5 px-4 py-3 rounded-lg backdrop-blur-md transition-all duration-500"
+      className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 select-none shadow-sm"
       style={{
-        backgroundColor: 'rgba(26, 26, 46, 0.85)',
-        border: `1px solid ${accentColor}26`,
-        boxShadow: `0 4px 20px -2px ${accentColor}1a`,
+        backgroundColor: 'rgba(15, 17, 28, 0.82)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderLeft: `2.5px solid ${accentColor}`,
+        boxShadow: `0 2px 12px -2px ${accentColor}15`,
       }}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <span
-          className="w-2 h-2 rounded-full animate-pulse"
-          style={{ backgroundColor: accentColor, boxShadow: `0 0 8px ${accentColor}` }}
-        />
-        <h1
-          className="text-base font-bold tracking-wider text-white uppercase select-none font-mono"
-          style={{ textShadow: `0 0 12px ${accentColor}40` }}
-        >
-          Building in Public
-        </h1>
-      </div>
-      <div className="flex items-center">
-        <span
-          className="text-xs px-2 py-0.5 rounded font-mono font-medium tracking-wide border"
+          className="w-1.5 h-1.5 rounded-full"
           style={{
-            color: accentColor,
-            borderColor: `${accentColor}33`,
-            backgroundColor: `${accentColor}10`,
+            backgroundColor: accentColor,
+            boxShadow: `0 0 6px ${accentColor}`,
           }}
-        >
-          DSA × AI/ML
+        />
+        <span className="text-[11px] font-mono font-bold tracking-wider text-slate-100 uppercase">
+          Building in Public
         </span>
       </div>
+
+      <span className="text-slate-600 font-mono text-[10px]">|</span>
+
+      <span className="text-[10px] font-mono tracking-tight text-slate-400 font-medium">
+        DSA · AI/ML · INTERNSHIP PREP
+      </span>
     </div>
   );
 }

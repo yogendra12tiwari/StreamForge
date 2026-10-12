@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../../store';
-import { Sparkles } from 'lucide-react';
+import { Target } from 'lucide-react';
 
 export function MissionWidget() {
   const isVisible = useStore((state) => state.widgets.mission);
   const currentMission = useStore((state) => state.currentMission);
+  const sessionTopic = useStore((state) => state.sessionTopic);
   const accentColor = useStore((state) => state.accentColor);
 
   const [displayedText, setDisplayedText] = useState(currentMission);
@@ -12,15 +13,11 @@ export function MissionWidget() {
 
   useEffect(() => {
     if (currentMission !== displayedText) {
-      // Start fade out
-      const fadeTimer = setTimeout(() => {
-        setIsFading(true);
-      }, 0);
-
+      const fadeTimer = setTimeout(() => setIsFading(true), 0);
       const swapTimer = setTimeout(() => {
         setDisplayedText(currentMission);
         setIsFading(false);
-      }, 250);
+      }, 200);
 
       return () => {
         clearTimeout(fadeTimer);
@@ -35,39 +32,39 @@ export function MissionWidget() {
 
   return (
     <div
-      className="inline-flex items-center gap-3 px-4 py-2.5 rounded-lg backdrop-blur-md transition-all duration-500 max-w-lg"
+      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 select-none max-w-md shadow-sm"
       style={{
-        backgroundColor: 'rgba(26, 26, 46, 0.85)',
-        border: `1px solid ${accentColor}26`,
-        boxShadow: `0 4px 20px -2px ${accentColor}1a`,
+        backgroundColor: 'rgba(15, 17, 28, 0.82)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRight: `2.5px solid ${accentColor}`,
+        boxShadow: `0 2px 12px -2px ${accentColor}15`,
       }}
     >
-      <div
-        className="p-1.5 rounded-md flex items-center justify-center shrink-0"
+      <Target size={13} style={{ color: accentColor }} className="shrink-0" />
+
+      {sessionTopic && (
+        <>
+          <span
+            className="text-[10px] font-mono uppercase font-semibold px-1.5 py-0.2 rounded"
+            style={{
+              color: accentColor,
+              backgroundColor: `${accentColor}15`,
+            }}
+          >
+            {sessionTopic}
+          </span>
+          <span className="text-slate-600 font-mono text-[10px]">•</span>
+        </>
+      )}
+
+      <p
+        className="text-xs font-medium text-slate-200 truncate tracking-wide transition-opacity duration-200"
         style={{
-          backgroundColor: `${accentColor}15`,
-          color: accentColor,
+          opacity: isFading ? 0 : 1,
         }}
       >
-        <Sparkles size={16} />
-      </div>
-
-      <div className="flex flex-col min-w-0">
-        <span
-          className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-semibold"
-        >
-          Active Mission
-        </span>
-        <p
-          className="text-sm font-medium text-white italic tracking-wide transition-opacity duration-300 leading-snug truncate"
-          style={{
-            opacity: isFading ? 0 : 1,
-            textShadow: `0 0 10px ${accentColor}25`,
-          }}
-        >
-          "{displayedText}"
-        </p>
-      </div>
+        {displayedText}
+      </p>
     </div>
   );
 }

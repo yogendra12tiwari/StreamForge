@@ -10,6 +10,8 @@ import {
   Megaphone,
   Share2,
   Clock,
+  Maximize2,
+  Sparkles,
 } from 'lucide-react';
 import { useStore } from '../../store';
 import type { WidgetVisibility } from '../../types';
@@ -25,62 +27,62 @@ interface WidgetMeta {
 const WIDGET_LIST: WidgetMeta[] = [
   {
     key: 'identity',
-    label: 'Identity Banner',
-    description: 'Streamer handle, avatar, and active stream role/tag',
+    label: 'Brand Identity',
+    description: '“BUILDING IN PUBLIC · DSA · AI/ML · INTERNSHIP PREP” header tag',
     icon: User,
-    positionHint: 'Top-Left Header',
+    positionHint: 'Top-Left Corner',
   },
   {
     key: 'mission',
-    label: 'Mission Bar',
-    description: 'Current challenge question and session objective',
+    label: 'Mission & Topic',
+    description: 'Current challenge question and focus topic',
     icon: Compass,
-    positionHint: 'Top-Center Banner',
-  },
-  {
-    key: 'sessionStatus',
-    label: 'Session Status & Timer',
-    description: 'Live broadcast status indicator and elapsed stream timer',
-    icon: Clock,
-    positionHint: 'Top-Right Header',
+    positionHint: 'Top-Right Corner',
   },
   {
     key: 'progress',
-    label: 'Task Progress',
-    description: 'Daily tasks checklist with completion badges',
+    label: 'Daily Task Progress',
+    description: 'Factual today completed tasks counter & minimal progress bar',
     icon: CheckSquare,
-    positionHint: 'Sidebar / Top-Left List',
+    positionHint: 'Bottom-Left Corner',
+  },
+  {
+    key: 'sessionStatus',
+    label: 'Coding Session Timer',
+    description: 'Live coding elapsed timer and focus indicator',
+    icon: Clock,
+    positionHint: 'Bottom-Right Corner',
   },
   {
     key: 'nowBuilding',
     label: 'Now Building',
-    description: 'Active project name, tech stack tags, and repository link',
+    description: 'Active project name badge',
     icon: Hammer,
-    positionHint: 'Bottom-Left Overlay',
+    positionHint: 'Bottom-Left (Next to Tasks)',
   },
   {
     key: 'cta',
     label: 'Call To Action',
-    description: 'Highlighted promotional banner and callout link',
+    description: 'Optional single project/companion destination link',
     icon: Megaphone,
-    positionHint: 'Bottom-Center Bar',
+    positionHint: 'Bottom-Right (Next to Timer)',
   },
   {
     key: 'socialLinks',
-    label: 'Social Links',
-    description: 'GitHub and portfolio link badges for viewers',
+    label: 'Social Badges',
+    description: 'Subtle GitHub and portfolio badges',
     icon: Share2,
-    positionHint: 'Bottom-Right Corner',
+    positionHint: 'Bottom-Right (Corner)',
   },
 ];
 
 const PRESET_COLORS = [
   { name: 'Cyan (Default)', hex: '#00d4ff' },
+  { name: 'Violet', hex: '#a855f7' },
   { name: 'Emerald', hex: '#10b981' },
-  { name: 'Purple', hex: '#8b5cf6' },
   { name: 'Amber', hex: '#f59e0b' },
   { name: 'Rose', hex: '#f43f5e' },
-  { name: 'Blue', hex: '#3b82f6' },
+  { name: 'Sky Blue', hex: '#38bdf8' },
 ];
 
 export function WidgetControls() {
@@ -88,20 +90,106 @@ export function WidgetControls() {
   const toggleWidget = useStore((state) => state.toggleWidget);
   const accentColor = useStore((state) => state.accentColor);
   const setAccentColor = useStore((state) => state.setAccentColor);
+  const scale = useStore((state) => state.scale ?? 1.0);
+  const setScale = useStore((state) => state.setScale);
+  const safeMargin = useStore((state) => state.safeMargin ?? 24);
+  const setSafeMargin = useStore((state) => state.setSafeMargin);
+  const distractionFree = useStore((state) => state.distractionFree ?? false);
+  const setDistractionFree = useStore((state) => state.setDistractionFree);
+
   const colorPickerId = useId();
 
   return (
     <div className="space-y-6">
-      {/* Accent Color Customizer */}
+      {/* 1. Screen-Sharing Distraction-Free & Layout Geometry Mode */}
+      <div className="p-5 rounded-xl bg-[#16213e]/70 border border-slate-700/60 shadow-lg backdrop-blur-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-white">Screen-Sharing Optimization</h3>
+              <p className="text-xs text-slate-400">
+                Ensure 85-90% central area stays clear for VS Code, Jupyter, terminals, and slides
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setDistractionFree(!distractionFree)}
+            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-xs font-mono font-medium transition-all cursor-pointer ${
+              distractionFree
+                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50 shadow-sm'
+                : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
+            }`}
+          >
+            <span>Distraction-Free Mode:</span>
+            <span className="font-bold">{distractionFree ? 'ON' : 'OFF'}</span>
+          </button>
+        </div>
+
+        {/* Sliders for Scale & Safe Margins */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-slate-300 font-medium flex items-center gap-1.5">
+                <Maximize2 size={13} className="text-cyan-400" /> Overlay Global Scale
+              </span>
+              <span className="font-mono text-cyan-400 font-semibold">{Math.round(scale * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0.75"
+              max="1.25"
+              step="0.05"
+              value={scale}
+              onChange={(e) => setScale(parseFloat(e.target.value))}
+              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+            />
+            <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>Compact (75%)</span>
+              <span>Default (100%)</span>
+              <span>Spacious (125%)</span>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-slate-300 font-medium flex items-center gap-1.5">
+                <Sliders size={13} className="text-purple-400" /> Screen Outer Safe Margin
+              </span>
+              <span className="font-mono text-purple-400 font-semibold">{safeMargin}px</span>
+            </div>
+            <input
+              type="range"
+              min="12"
+              max="48"
+              step="4"
+              value={safeMargin}
+              onChange={(e) => setSafeMargin(parseInt(e.target.value, 10))}
+              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-400"
+            />
+            <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>Edge (12px)</span>
+              <span>Standard (24px)</span>
+              <span>Spacious (48px)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Accent Color Customizer */}
       <div className="p-5 rounded-xl bg-[#16213e]/70 border border-slate-700/60 shadow-lg backdrop-blur-sm space-y-4">
         <div className="flex items-center space-x-3 border-b border-slate-800 pb-3">
           <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
             <Palette className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white">Stream Accent Color</h3>
+            <h3 className="text-sm font-semibold text-white">Theme Accent Color</h3>
             <p className="text-xs text-slate-400">
-              Personalize highlights, borders, and glows across the overlay canvas
+              Subtle cyan & violet accents across widget borders and micro-indicators
             </p>
           </div>
         </div>
@@ -144,125 +232,99 @@ export function WidgetControls() {
         </div>
       </div>
 
-      {/* Visual Canvas Layout Map Preview */}
+      {/* 3. Screen-First Visual Canvas Layout Map Preview */}
       <div className="p-5 rounded-xl bg-[#16213e]/70 border border-slate-700/60 shadow-lg backdrop-blur-sm space-y-4">
         <div className="flex items-center space-x-3 border-b border-slate-800 pb-3">
           <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
             <Eye className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white">Visual Layout Map (16:9 Canvas)</h3>
+            <h3 className="text-sm font-semibold text-white">Screen-First 1080p Layout Map</h3>
             <p className="text-xs text-slate-400">
-              Interactive layout preview showing enabled/disabled component slots
+              Outer boundary anchors ensure zero obstruction over code editors & terminals
             </p>
           </div>
         </div>
 
         {/* 16:9 Scaled Schematic */}
-        <div className="relative w-full aspect-video rounded-xl bg-[#0b0c16] border-2 border-slate-800 p-4 flex flex-col justify-between overflow-hidden shadow-2xl">
-          {/* Subtle grid lines background */}
-          <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none" />
-
+        <div className="relative w-full aspect-video rounded-xl bg-[#090b14] border-2 border-slate-800 p-3 sm:p-5 flex flex-col justify-between overflow-hidden shadow-2xl">
           {/* Top Bar slots */}
           <div className="flex items-center justify-between gap-3 relative z-10">
-            {/* Identity */}
+            {/* Top-Left: Identity */}
             <div
-              className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
+              className={`px-3 py-1 rounded border text-[11px] font-mono transition-all ${
                 widgets.identity
                   ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
                   : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
               }`}
             >
-              Identity
+              Building in Public
             </div>
 
-            {/* Mission */}
+            {/* Top-Right: Mission */}
             <div
-              className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-all flex-1 max-w-md text-center ${
+              className={`px-3 py-1 rounded border text-[11px] font-mono transition-all ${
                 widgets.mission
-                  ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
+                  ? 'border-purple-500/50 bg-[#16213e]/90 text-purple-300 shadow-sm'
                   : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
               }`}
             >
-              Mission: Active Goal
-            </div>
-
-            {/* Session Status */}
-            <div
-              className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
-                widgets.sessionStatus
-                  ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
-                  : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
-              }`}
-            >
-              Session Status
+              Current Mission & Topic
             </div>
           </div>
 
-          {/* Middle Body / Sidebar */}
-          <div className="flex items-center justify-between gap-4 relative z-10 my-auto">
-            {/* Progress Checklist */}
-            <div
-              className={`p-3 rounded-lg border text-xs font-medium transition-all w-48 ${
-                widgets.progress
-                  ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
-                  : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
-              }`}
-            >
-              <div className="font-semibold mb-1">Task Progress</div>
-              <div className="space-y-1 text-[10px] text-slate-400">
-                <div className="h-1.5 bg-slate-800 rounded w-full" />
-                <div className="h-1.5 bg-slate-800 rounded w-4/5" />
-              </div>
-            </div>
-
-            {/* Center OBS Main Video Area Placeholder */}
-            <div className="text-center text-slate-600 text-xs font-mono uppercase tracking-widest pointer-events-none">
-              OBS Stream Video Canvas
-            </div>
-
-            <div className="w-48 invisible" />
+          {/* Central Area: Screen-Sharing Display (85-90% Clearance) */}
+          <div className="my-auto text-center border border-dashed border-slate-800/80 rounded-xl py-8 sm:py-14 bg-slate-950/40">
+            <span className="text-xs sm:text-sm font-mono uppercase tracking-widest text-slate-400 font-semibold block">
+              Clear Screen-Sharing Zone (85–90% Unobstructed)
+            </span>
+            <span className="text-[11px] text-slate-500 mt-1 block">
+              VS Code • Terminal • Jupyter Notebook • Browser Docs • WebCam (Independent OBS source)
+            </span>
           </div>
 
           {/* Bottom Bar slots */}
           <div className="flex items-center justify-between gap-3 relative z-10">
-            {/* Now Building */}
-            <div
-              className={`px-3 py-2 rounded-lg border text-xs font-medium transition-all max-w-xs ${
-                widgets.nowBuilding
-                  ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
-                  : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
-              }`}
-            >
-              Now Building
+            {/* Bottom-Left: Progress + NowBuilding */}
+            <div className="flex items-center gap-2">
+              <div
+                className={`px-3 py-1 rounded border text-[11px] font-mono transition-all ${
+                  widgets.progress && !distractionFree
+                    ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
+                    : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
+                }`}
+              >
+                Today Tasks Progress
+              </div>
+              {widgets.nowBuilding && !distractionFree && (
+                <div className="px-2 py-1 rounded border border-cyan-500/30 bg-[#16213e]/70 text-[10px] font-mono text-cyan-400">
+                  Building: Project
+                </div>
+              )}
             </div>
 
-            {/* CTA */}
-            <div
-              className={`px-4 py-1.5 rounded-lg border text-xs font-medium transition-all text-center ${
-                widgets.cta
-                  ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
-                  : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
-              }`}
-            >
-              Call To Action
-            </div>
-
-            {/* Social Links */}
-            <div
-              className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
-                widgets.socialLinks
-                  ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
-                  : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
-              }`}
-            >
-              Social Links
+            {/* Bottom-Right: Timer + CTA */}
+            <div className="flex items-center gap-2">
+              {widgets.cta && !distractionFree && (
+                <div className="px-2 py-1 rounded border border-purple-500/30 bg-[#16213e]/70 text-[10px] font-mono text-purple-300">
+                  CTA Link ↗
+                </div>
+              )}
+              <div
+                className={`px-3 py-1 rounded border text-[11px] font-mono transition-all ${
+                  widgets.sessionStatus && !distractionFree
+                    ? 'border-cyan-500/50 bg-[#16213e]/90 text-cyan-300 shadow-sm'
+                    : 'border-dashed border-slate-800 bg-slate-900/40 text-slate-600'
+                }`}
+              >
+                Focus Timer (HH:MM:SS)
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Widget Toggles List */}
+      {/* 4. Widget Visibility Toggles */}
       <div className="p-5 rounded-xl bg-[#16213e]/70 border border-slate-700/60 shadow-lg backdrop-blur-sm space-y-4">
         <div className="flex items-center space-x-3 border-b border-slate-800 pb-3">
           <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
@@ -271,7 +333,7 @@ export function WidgetControls() {
           <div>
             <h3 className="text-sm font-semibold text-white">Widget Visibility Switches</h3>
             <p className="text-xs text-slate-400">
-              Toggle overlay modules on or off without altering your underlying stream data
+              Enable or disable individual modules to tailor your overlay per stream session
             </p>
           </div>
         </div>

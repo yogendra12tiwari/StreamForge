@@ -1,3 +1,4 @@
+import { useStore } from '../store';
 import {
   IdentityWidget,
   MissionWidget,
@@ -9,6 +10,10 @@ import {
 } from '../components/overlay';
 
 export default function OverlayPage() {
+  const scale = useStore((state) => state.scale ?? 1.0);
+  const safeMargin = useStore((state) => state.safeMargin ?? 24);
+  const distractionFree = useStore((state) => state.distractionFree ?? false);
+
   return (
     <div
       className="relative w-screen h-screen bg-transparent overflow-hidden select-none pointer-events-none"
@@ -19,40 +24,57 @@ export default function OverlayPage() {
         maxHeight: '1080px',
       }}
     >
-      {/* Top Header Row (Top-Left: Identity, Top-Center: Mission, Top-Right: Session) */}
-      <header className="absolute top-8 left-8 right-8 flex items-start justify-between gap-6 pointer-events-auto">
-        <div className="shrink-0">
+      {/* 
+        Scaled Overlay Container:
+        Keeps 85-90% of screen center completely unobstructed for code/terminals/slides.
+      */}
+      <div
+        className="w-full h-full relative transition-transform duration-300"
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: 'center center',
+        }}
+      >
+        {/* 1. TOP-LEFT: Identity / Brand Label */}
+        <div
+          className="absolute pointer-events-auto"
+          style={{ top: `${safeMargin}px`, left: `${safeMargin}px` }}
+        >
           <IdentityWidget />
         </div>
 
-        <div className="flex-1 flex justify-center max-w-2xl px-4">
+        {/* 2. TOP-RIGHT: Current Mission / Topic */}
+        <div
+          className="absolute pointer-events-auto"
+          style={{ top: `${safeMargin}px`, right: `${safeMargin}px` }}
+        >
           <MissionWidget />
         </div>
 
-        <div className="shrink-0">
-          <SessionWidget />
-        </div>
-      </header>
+        {/* If distraction-free mode is enabled, only Brand and Mission are shown */}
+        {!distractionFree && (
+          <>
+            {/* 3. BOTTOM-LEFT: Daily Task Progress (+ Optional NowBuilding next to it) */}
+            <div
+              className="absolute pointer-events-auto flex items-center gap-3"
+              style={{ bottom: `${safeMargin}px`, left: `${safeMargin}px` }}
+            >
+              <ProgressWidget />
+              <NowBuildingWidget />
+            </div>
 
-      {/* Middle Left: Progress / Task Tracker */}
-      <aside className="absolute left-8 top-32 pointer-events-auto">
-        <ProgressWidget />
-      </aside>
-
-      {/* Bottom Footer Row (Bottom-Left: Now Building, Bottom-Center: CTA, Bottom-Right: Social Links) */}
-      <footer className="absolute bottom-8 left-8 right-8 flex items-end justify-between gap-6 pointer-events-auto">
-        <div className="max-w-md shrink-0">
-          <NowBuildingWidget />
-        </div>
-
-        <div className="flex-1 flex justify-center px-4">
-          <CTAWidget />
-        </div>
-
-        <div className="shrink-0">
-          <SocialLinksWidget />
-        </div>
-      </footer>
+            {/* 4. BOTTOM-RIGHT: Coding Session Timer (+ Optional CTA / Socials) */}
+            <div
+              className="absolute pointer-events-auto flex items-center gap-3"
+              style={{ bottom: `${safeMargin}px`, right: `${safeMargin}px` }}
+            >
+              <CTAWidget />
+              <SocialLinksWidget />
+              <SessionWidget />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

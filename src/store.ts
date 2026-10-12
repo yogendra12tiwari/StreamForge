@@ -25,6 +25,9 @@ interface StreamForgeState extends OverlayConfig {
   updateSocialLink: (index: number, link: Partial<SocialLink>) => void;
   toggleWidget: (widget: keyof WidgetVisibility) => void;
   setAccentColor: (color: string) => void;
+  setScale: (scale: number) => void;
+  setSafeMargin: (margin: number) => void;
+  setDistractionFree: (enabled: boolean) => void;
   setCurrentMission: (mission: string) => void;
   setSessionTopic: (topic: string) => void;
   startSession: (topic?: string) => void;
@@ -122,6 +125,9 @@ export const useStore = create<StreamForgeState>()(
       socialLinks: initialSocialLinks,
       widgets: initialWidgets,
       accentColor: '#00d4ff',
+      scale: 1.0,
+      safeMargin: 24,
+      distractionFree: false,
       sessionTopic: 'Dynamic Programming',
       sessionStartTime: null,
       companionUrl: 'http://localhost:5173/companion',
@@ -201,6 +207,18 @@ export const useStore = create<StreamForgeState>()(
 
       setAccentColor: (accentColor: string) => {
         set({ accentColor });
+      },
+
+      setScale: (scale: number) => {
+        set({ scale });
+      },
+
+      setSafeMargin: (safeMargin: number) => {
+        set({ safeMargin });
+      },
+
+      setDistractionFree: (distractionFree: boolean) => {
+        set({ distractionFree });
       },
 
       setCurrentMission: (currentMission: string) => {

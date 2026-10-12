@@ -18,53 +18,16 @@ export function NowBuildingWidget() {
 
   return (
     <div
-      className="inline-flex flex-col gap-2 p-3.5 rounded-lg backdrop-blur-md transition-all duration-500 max-w-sm"
+      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md backdrop-blur-md transition-all duration-300 max-w-xs select-none shadow-sm"
       style={{
-        backgroundColor: 'rgba(26, 26, 46, 0.85)',
-        border: `1px solid ${accentColor}26`,
-        boxShadow: `0 4px 20px -2px ${accentColor}1a`,
+        backgroundColor: 'rgba(15, 17, 28, 0.82)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: `0 2px 10px -2px ${accentColor}15`,
       }}
     >
-      <div className="flex items-center gap-2">
-        <div
-          className="p-1 rounded flex items-center justify-center shrink-0"
-          style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
-        >
-          <Hammer size={14} />
-        </div>
-        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
-          Now Building
-        </span>
-      </div>
-
-      <div>
-        <h2 className="text-sm font-semibold text-white tracking-tight">
-          {currentProject.name}
-        </h2>
-        {currentProject.description && (
-          <p className="text-xs text-slate-300 mt-0.5 line-clamp-2 leading-relaxed">
-            {currentProject.description}
-          </p>
-        )}
-      </div>
-
-      {currentProject.techStack && currentProject.techStack.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {currentProject.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="text-[10px] font-mono px-2 py-0.5 rounded border"
-              style={{
-                color: accentColor,
-                borderColor: `${accentColor}33`,
-                backgroundColor: `${accentColor}10`,
-              }}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      )}
+      <Hammer size={12} style={{ color: accentColor }} className="shrink-0" />
+      <span className="text-[10px] uppercase font-mono text-slate-400 font-semibold">Building:</span>
+      <span className="text-xs font-medium text-white truncate">{currentProject.name}</span>
     </div>
   );
 }

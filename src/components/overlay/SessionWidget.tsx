@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../../store';
-import { Clock, Radio } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 function getFormattedElapsed(startTimeIso: string | null): string {
   if (!startTimeIso) return '00:00:00';
@@ -22,7 +22,6 @@ function getFormattedElapsed(startTimeIso: string | null): string {
 export function SessionWidget() {
   const isVisible = useStore((state) => state.widgets.sessionStatus);
   const sessionStartTime = useStore((state) => state.sessionStartTime);
-  const sessionTopic = useStore((state) => state.sessionTopic);
   const accentColor = useStore((state) => state.accentColor);
 
   const [elapsed, setElapsed] = useState<string>(() => getFormattedElapsed(sessionStartTime));
@@ -43,60 +42,33 @@ export function SessionWidget() {
     return null;
   }
 
-  // If no start time and no topic, nothing to show
-  if (!sessionStartTime && !sessionTopic) {
-    return null;
-  }
-
   return (
     <div
-      className="inline-flex items-center gap-3 px-3.5 py-2 rounded-lg backdrop-blur-md transition-all duration-500 font-mono"
+      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 font-mono select-none shadow-sm"
       style={{
-        backgroundColor: 'rgba(26, 26, 46, 0.85)',
-        border: `1px solid ${accentColor}26`,
-        boxShadow: `0 4px 20px -2px ${accentColor}1a`,
+        backgroundColor: 'rgba(15, 17, 28, 0.82)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRight: `2.5px solid ${accentColor}`,
+        boxShadow: `0 2px 12px -2px ${accentColor}15`,
       }}
     >
-      {sessionStartTime ? (
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5">
-            <span
-              className="w-2 h-2 rounded-full animate-ping"
-              style={{ backgroundColor: accentColor }}
-            />
-            <Clock size={14} style={{ color: accentColor }} />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs uppercase text-slate-400 font-semibold tracking-wider">
-              Live
-            </span>
-            <span className="text-sm font-bold text-white tracking-widest">
-              {elapsed}
-            </span>
-          </div>
-        </div>
-      ) : (
-        <div className="flex items-center gap-1.5 text-xs">
-          <Radio size={14} style={{ color: accentColor }} />
-          <span className="text-slate-400">Stream Status:</span>
-          <span className="text-white font-medium">Ready</span>
-        </div>
-      )}
+      <div className="flex items-center gap-1.5">
+        <span
+          className={`w-1.5 h-1.5 rounded-full ${sessionStartTime ? 'animate-pulse' : ''}`}
+          style={{
+            backgroundColor: sessionStartTime ? accentColor : '#64748b',
+          }}
+        />
+        <Clock size={12} style={{ color: sessionStartTime ? accentColor : '#94a3b8' }} />
+      </div>
 
-      {sessionTopic && (
-        <>
-          <div className="w-px h-4 bg-slate-700" />
-          <div className="flex items-center gap-1 text-xs text-slate-300">
-            <span className="text-slate-400">Currently:</span>
-            <span
-              className="font-semibold text-white tracking-wide"
-              style={{ textShadow: `0 0 8px ${accentColor}25` }}
-            >
-              {sessionTopic}
-            </span>
-          </div>
-        </>
-      )}
+      <span className="text-[10px] uppercase text-slate-400 font-medium tracking-wider">
+        {sessionStartTime ? 'Focus' : 'Session'}:
+      </span>
+
+      <span className="text-xs font-bold text-white tracking-widest">
+        {sessionStartTime ? elapsed : 'Ready'}
+      </span>
     </div>
   );
 }
