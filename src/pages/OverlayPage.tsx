@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useStore } from '../store';
 import {
   IdentityWidget,
@@ -14,25 +15,49 @@ export default function OverlayPage() {
   const safeMargin = useStore((state) => state.safeMargin ?? 24);
   const distractionFree = useStore((state) => state.distractionFree ?? false);
 
+  // Responsive scale detection for preview windows or non-1920x1080 browser viewports
+  const [viewportScale, setViewportScale] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // In OBS Browser Source (1920x1080), window.innerWidth is 1920.
+      // In regular browser preview, autoscale down so all 4 corners remain visible.
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (w < 1920 || h < 1080) {
+        const s = Math.min(w / 1920, h / 1080);
+        setViewportScale(s);
+      } else {
+        setViewportScale(1);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const combinedScale = scale * viewportScale;
+
   return (
     <div
-      className="relative w-screen h-screen bg-transparent overflow-hidden select-none pointer-events-none"
+      className="fixed inset-0 w-screen h-screen bg-transparent overflow-hidden select-none pointer-events-none flex items-center justify-center"
       style={{
-        width: '1920px',
-        height: '1080px',
-        maxWidth: '1920px',
-        maxHeight: '1080px',
+        backgroundColor: 'transparent',
       }}
     >
       {/* 
-        Scaled Overlay Container:
-        Keeps 85-90% of screen center completely unobstructed for code/terminals/slides.
+        1920x1080 Native Canvas Area
+        Scaled smoothly to fit viewport while keeping 100% genuine transparency
       */}
       <div
-        className="w-full h-full relative transition-transform duration-300"
+        className="relative bg-transparent pointer-events-none"
         style={{
-          transform: `scale(${scale})`,
+          width: '1920px',
+          height: '1080px',
+          transform: `scale(${combinedScale})`,
           transformOrigin: 'center center',
+          backgroundColor: 'transparent',
         }}
       >
         {/* 1. TOP-LEFT: Identity / Brand Label */}
