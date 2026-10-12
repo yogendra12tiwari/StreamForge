@@ -1,110 +1,71 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useStore } from '../store';
 import {
   IdentityWidget,
   MissionWidget,
   ProgressWidget,
-  NowBuildingWidget,
-  CTAWidget,
-  SocialLinksWidget,
   SessionWidget,
 } from '../components/overlay';
 
 export default function OverlayPage() {
-  const scale = useStore((state) => state.scale ?? 1.0);
   const safeMargin = useStore((state) => state.safeMargin ?? 24);
-  const distractionFree = useStore((state) => state.distractionFree ?? false);
-
-  // Responsive scale detection for preview windows or non-1920x1080 browser viewports
-  const [viewportScale, setViewportScale] = useState(1);
 
   useEffect(() => {
-    // Only lock overflow to hidden while on the /overlay route
+    // Ensure OBS browser canvas has zero scrollbars and no background
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.backgroundColor = 'transparent';
+    document.body.style.backgroundColor = 'transparent';
 
-    const handleResize = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (w < 1920 || h < 1080) {
-        const s = Math.min(w / 1920, h / 1080);
-        setViewportScale(s);
-      } else {
-        setViewportScale(1);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
     return () => {
       document.documentElement.style.overflow = 'auto';
       document.body.style.overflow = 'auto';
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  const combinedScale = scale * viewportScale;
-
   return (
     <div
-      className="fixed inset-0 w-screen h-screen bg-transparent overflow-hidden select-none pointer-events-none flex items-center justify-center"
+      className="fixed inset-0 w-screen h-screen bg-transparent overflow-hidden select-none pointer-events-none"
       style={{
         backgroundColor: 'transparent',
       }}
     >
       {/* 
-        1920x1080 Native Canvas Area
-        Scaled smoothly to fit viewport while keeping 100% genuine transparency
+        Native Screen-Fitting 4-Corner Layout:
+        Automatically adapts to ANY OBS Browser Source resolution (1080p, 720p, 1440p, 4K)
+        without clipping, off-screen overflow, or complex transform-scales.
       */}
+
+      {/* 1. TOP-LEFT: Brand & Focus Tag */}
       <div
-        className="relative bg-transparent pointer-events-none"
-        style={{
-          width: '1920px',
-          height: '1080px',
-          transform: `scale(${combinedScale})`,
-          transformOrigin: 'center center',
-          backgroundColor: 'transparent',
-        }}
+        className="absolute pointer-events-auto"
+        style={{ top: `${safeMargin}px`, left: `${safeMargin}px` }}
       >
-        {/* 1. TOP-LEFT: Identity / Brand Label */}
-        <div
-          className="absolute pointer-events-auto"
-          style={{ top: `${safeMargin}px`, left: `${safeMargin}px` }}
-        >
-          <IdentityWidget />
-        </div>
+        <IdentityWidget />
+      </div>
 
-        {/* 2. TOP-RIGHT: Current Mission / Topic */}
-        <div
-          className="absolute pointer-events-auto"
-          style={{ top: `${safeMargin}px`, right: `${safeMargin}px` }}
-        >
-          <MissionWidget />
-        </div>
+      {/* 2. TOP-RIGHT: Current Challenge & Topic */}
+      <div
+        className="absolute pointer-events-auto"
+        style={{ top: `${safeMargin}px`, right: `${safeMargin}px` }}
+      >
+        <MissionWidget />
+      </div>
 
-        {/* If distraction-free mode is enabled, only Brand and Mission are shown */}
-        {!distractionFree && (
-          <>
-            {/* 3. BOTTOM-LEFT: Daily Task Progress (+ Optional NowBuilding next to it) */}
-            <div
-              className="absolute pointer-events-auto flex items-center gap-3"
-              style={{ bottom: `${safeMargin}px`, left: `${safeMargin}px` }}
-            >
-              <ProgressWidget />
-              <NowBuildingWidget />
-            </div>
+      {/* 3. BOTTOM-LEFT: Daily Task Counter & Progress */}
+      <div
+        className="absolute pointer-events-auto"
+        style={{ bottom: `${safeMargin}px`, left: `${safeMargin}px` }}
+      >
+        <ProgressWidget />
+      </div>
 
-            {/* 4. BOTTOM-RIGHT: Coding Session Timer (+ Optional CTA / Socials) */}
-            <div
-              className="absolute pointer-events-auto flex items-center gap-3"
-              style={{ bottom: `${safeMargin}px`, right: `${safeMargin}px` }}
-            >
-              <CTAWidget />
-              <SocialLinksWidget />
-              <SessionWidget />
-            </div>
-          </>
-        )}
+      {/* 4. BOTTOM-RIGHT: Coding Session Focus Timer */}
+      <div
+        className="absolute pointer-events-auto"
+        style={{ bottom: `${safeMargin}px`, right: `${safeMargin}px` }}
+      >
+        <SessionWidget />
       </div>
     </div>
   );

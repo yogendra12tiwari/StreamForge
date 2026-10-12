@@ -12,7 +12,6 @@ export function ProgressWidget() {
 
   const today = new Date().toISOString().split('T')[0];
   const todayTasks = tasks.filter((task) => task.createdAt?.startsWith(today));
-  // Use todayTasks if available, or all tasks as sensible fallback so progress always shows active feedback
   const displayTasks = todayTasks.length > 0 ? todayTasks : tasks;
   const totalTasks = displayTasks.length;
   const completedTasks = displayTasks.filter((task) => task.completed).length;
@@ -20,31 +19,31 @@ export function ProgressWidget() {
 
   return (
     <div
-      className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 select-none shadow-sm"
+      className="inline-flex items-center gap-3 px-3.5 py-2 rounded-lg select-none"
       style={{
-        backgroundColor: 'rgba(15, 17, 28, 0.85)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderLeft: `2.5px solid ${accentColor}`,
-        boxShadow: `0 2px 12px -2px ${accentColor}20`,
+        backgroundColor: '#121420',
+        border: `1.5px solid ${accentColor}`,
+        boxShadow: `0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px ${accentColor}33`,
       }}
     >
-      <div className="flex items-center gap-1.5 text-xs text-slate-300 font-mono">
-        <CheckCircle2 size={13} style={{ color: accentColor }} />
-        <span className="text-[11px] text-slate-400">Tasks:</span>
+      <div className="flex items-center gap-2 text-xs font-mono">
+        <CheckCircle2 size={15} style={{ color: accentColor }} />
+        <span className="text-slate-300 font-medium">Tasks:</span>
         <span className="text-white font-bold">{completedTasks}/{totalTasks}</span>
       </div>
 
-      <div className="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+      <div className="w-20 bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
         <div
           className="h-full rounded-full transition-all duration-300"
           style={{
             width: `${percentage}%`,
             backgroundColor: accentColor,
+            boxShadow: `0 0 8px ${accentColor}`,
           }}
         />
       </div>
 
-      <span className="text-[10px] font-mono text-slate-400">
+      <span className="text-xs font-mono font-bold text-cyan-200">
         {percentage}%
       </span>
     </div>

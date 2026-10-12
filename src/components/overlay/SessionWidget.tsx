@@ -44,25 +44,25 @@ export function SessionWidget() {
 
   return (
     <div
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 font-mono select-none shadow-sm"
+      className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-lg font-mono select-none"
       style={{
-        backgroundColor: 'rgba(15, 17, 28, 0.85)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRight: `2.5px solid ${accentColor}`,
-        boxShadow: `0 2px 12px -2px ${accentColor}20`,
+        backgroundColor: '#121420',
+        border: `1.5px solid ${accentColor}`,
+        boxShadow: `0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px ${accentColor}33`,
       }}
     >
       <div className="flex items-center gap-1.5">
         <span
-          className={`w-1.5 h-1.5 rounded-full ${sessionStartTime ? 'animate-pulse' : ''}`}
+          className={`w-2.5 h-2.5 rounded-full ${sessionStartTime ? 'animate-pulse' : ''}`}
           style={{
             backgroundColor: sessionStartTime ? accentColor : '#10b981',
+            boxShadow: `0 0 6px ${sessionStartTime ? accentColor : '#10b981'}`,
           }}
         />
-        <Clock size={12} style={{ color: sessionStartTime ? accentColor : '#10b981' }} />
+        <Clock size={14} style={{ color: sessionStartTime ? accentColor : '#10b981' }} />
       </div>
 
-      <span className="text-[10px] uppercase text-slate-400 font-medium tracking-wider">
+      <span className="text-xs uppercase text-slate-300 font-bold tracking-wider">
         {sessionStartTime ? 'Live' : 'Status'}:
       </span>
 

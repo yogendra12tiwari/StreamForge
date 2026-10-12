@@ -10,30 +10,29 @@ export function IdentityWidget() {
 
   return (
     <div
-      className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 select-none shadow-sm"
+      className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-lg select-none"
       style={{
-        backgroundColor: 'rgba(15, 17, 28, 0.85)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderLeft: `2.5px solid ${accentColor}`,
-        boxShadow: `0 2px 12px -2px ${accentColor}20`,
+        backgroundColor: '#121420',
+        border: `1.5px solid ${accentColor}`,
+        boxShadow: `0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px ${accentColor}33`,
       }}
     >
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <span
-          className="w-1.5 h-1.5 rounded-full"
+          className="w-2.5 h-2.5 rounded-full"
           style={{
             backgroundColor: accentColor,
-            boxShadow: `0 0 6px ${accentColor}`,
+            boxShadow: `0 0 8px ${accentColor}`,
           }}
         />
-        <span className="text-[11px] font-mono font-bold tracking-wider text-slate-100 uppercase">
+        <span className="text-xs font-mono font-bold tracking-wider text-white uppercase">
           Building in Public
         </span>
       </div>
 
-      <span className="text-slate-600 font-mono text-[10px]">|</span>
+      <span className="text-slate-500 font-mono text-xs">|</span>
 
-      <span className="text-[10px] font-mono tracking-tight text-slate-300 font-medium">
+      <span className="text-xs font-mono font-semibold tracking-wide text-cyan-200">
         DSA · AI/ML · INTERNSHIP PREP
       </span>
     </div>

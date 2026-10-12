@@ -13,32 +13,32 @@ export function MissionWidget() {
 
   return (
     <div
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md backdrop-blur-md transition-all duration-300 select-none max-w-md shadow-sm"
+      className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-lg select-none max-w-lg"
       style={{
-        backgroundColor: 'rgba(15, 17, 28, 0.85)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRight: `2.5px solid ${accentColor}`,
-        boxShadow: `0 2px 12px -2px ${accentColor}20`,
+        backgroundColor: '#121420',
+        border: `1.5px solid ${accentColor}`,
+        boxShadow: `0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px ${accentColor}33`,
       }}
     >
-      <Target size={13} style={{ color: accentColor }} className="shrink-0" />
+      <Target size={15} style={{ color: accentColor }} className="shrink-0" />
 
       {sessionTopic && (
         <>
           <span
-            className="text-[10px] font-mono uppercase font-semibold px-1.5 py-0.5 rounded"
+            className="text-xs font-mono font-bold uppercase px-2 py-0.5 rounded"
             style={{
-              color: accentColor,
-              backgroundColor: `${accentColor}18`,
+              color: '#ffffff',
+              backgroundColor: `${accentColor}33`,
+              border: `1px solid ${accentColor}66`,
             }}
           >
             {sessionTopic}
           </span>
-          <span className="text-slate-600 font-mono text-[10px]">•</span>
+          <span className="text-slate-500 font-mono text-xs">•</span>
         </>
       )}
 
-      <p className="text-xs font-medium text-slate-200 truncate tracking-wide">
+      <p className="text-xs font-semibold text-white truncate tracking-wide">
         {currentMission}
       </p>
     </div>
