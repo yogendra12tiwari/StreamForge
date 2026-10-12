@@ -19,9 +19,11 @@ export default function OverlayPage() {
   const [viewportScale, setViewportScale] = useState(1);
 
   useEffect(() => {
+    // Only lock overflow to hidden while on the /overlay route
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
     const handleResize = () => {
-      // In OBS Browser Source (1920x1080), window.innerWidth is 1920.
-      // In regular browser preview, autoscale down so all 4 corners remain visible.
       const w = window.innerWidth;
       const h = window.innerHeight;
       if (w < 1920 || h < 1080) {
@@ -34,7 +36,11 @@ export default function OverlayPage() {
 
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const combinedScale = scale * viewportScale;
